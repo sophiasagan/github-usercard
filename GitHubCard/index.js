@@ -6,11 +6,28 @@
 
 
 // Make a request for a user with a given ID
-axios.get('https://api.github.com/users/sophiasagan')
+axios.get('https://api.github.com/users/sophiasagan/followers')
 .then(response => {
   // handle success
-  console.log(response.data);
-})
+  console.log(response.data)
+  parseUser('https://api.github.com/users/sophiasagan')
+  response.data.map(element => {
+    parseUser(element['url']);
+  });
+
+});
+
+function parseUser(user) {
+  axios.get(`${user}`)
+  .then(response => {
+    const cards = document.querySelector('.cards');
+    console.log('Github User Data', response.data);
+    cards.appendChild(userCard(response.data));
+  })
+  .catch(error => {
+    console.log('Sorry, an error has occurred', error);
+  });
+}
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -55,6 +72,47 @@ const followersArray = [];
 </div>
 
 */
+function userCard(data) {
+  //console.log('data:', data)
+  const newCard = document.createElement('div'),
+  cardImg = document.createElement('img'),
+  cardInfo = document.createElement('div'),
+  name = document.createElement('h3'),
+  username = document.createElement('p'),
+  location = document.createElement('p'),
+  profile = document.createElement('p'),
+  profileLink = document.createElement('a'),
+  followers = document.createElement('p'),
+  following = document.createElement('p'),
+  bio = document.createElement('p')
+
+  newCard.appendChild(cardImg);
+  newCard.appendChild(cardInfo),
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(profileLink);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  newCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  username.classList.add('username');
+
+  cardImg.src = `${data.avatar_url}`;
+  name.textContent = `Name: ${data.name}`;
+  username.textContent = `Username: ${data.login}`;
+  location.textContent = `Location: ${data.location}`;
+  profileLink.textContent = `Link to profile: ${data.login}`;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Following: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
+
+  return newCard;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
