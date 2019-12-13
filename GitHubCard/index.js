@@ -24,8 +24,8 @@ function parseUser(user) {
     console.log('Github User Data', response.data);
     cards.appendChild(userCard(response.data));
   })
-  .catch(error => {
-    console.log('Sorry, an error has occurred', error);
+  .catch(err => {
+    console.log('Sorry, an error has occurred', err);
   });
 }
 
@@ -81,7 +81,8 @@ function userCard(data) {
   username = document.createElement('p'),
   location = document.createElement('p'),
   profile = document.createElement('p'),
-  profileLink = document.createElement('a'),
+  publicRepos = document.createElement('p'),
+  // email = document.createElement('p'),
   followers = document.createElement('p'),
   following = document.createElement('p'),
   bio = document.createElement('p')
@@ -92,7 +93,8 @@ function userCard(data) {
   cardInfo.appendChild(username);
   cardInfo.appendChild(location);
   cardInfo.appendChild(profile);
-  profile.appendChild(profileLink);
+  profile.appendChild(publicRepos);
+  // profile.appendChild(email);
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
   cardInfo.appendChild(bio);
@@ -106,13 +108,17 @@ function userCard(data) {
   name.textContent = `Name: ${data.name}`;
   username.textContent = `Username: ${data.login}`;
   location.textContent = `Location: ${data.location}`;
-  profileLink.textContent = `Link to profile: ${data.login}`;
+  publicRepos.textContent = `Public Repos: ${data.public_repos}`;
+  // email.textContent = `Email: ${data.email}`;
   followers.textContent = `Followers: ${data.followers}`;
   following.textContent = `Following: ${data.following}`;
   bio.textContent = `Bio: ${data.bio}`;
 
   return newCard;
 }
+
+TweenMax.to(".cards", 5, {boxShadow:"0px 0px 80px black"});
+
 
 /* List of LS Instructors Github username's: 
   tetondan
