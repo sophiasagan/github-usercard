@@ -2,6 +2,32 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+// const axios = require('axios');
+
+
+// Make a request for a user with a given ID
+axios.get('https://api.github.com/users/sophiasagan/followers')
+.then(response => {
+  // handle success
+  console.log(response.data)
+  parseUser('https://api.github.com/users/sophiasagan')
+  response.data.map(element => {
+    parseUser(element['url']);
+  });
+
+});
+
+function parseUser(user) {
+  axios.get(`${user}`)
+  .then(response => {
+    const cards = document.querySelector('.cards');
+    console.log('Github User Data', response.data);
+    cards.appendChild(userCard(response.data));
+  })
+  .catch(err => {
+    console.log('Sorry, an error has occurred', err);
+  });
+}
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -13,6 +39,7 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -45,6 +72,53 @@ const followersArray = [];
 </div>
 
 */
+function userCard(data) {
+  //console.log('data:', data)
+  const newCard = document.createElement('div'),
+  cardImg = document.createElement('img'),
+  cardInfo = document.createElement('div'),
+  name = document.createElement('h3'),
+  username = document.createElement('p'),
+  location = document.createElement('p'),
+  profile = document.createElement('p'),
+  publicRepos = document.createElement('p'),
+  // email = document.createElement('p'),
+  followers = document.createElement('p'),
+  following = document.createElement('p'),
+  bio = document.createElement('p')
+
+  newCard.appendChild(cardImg);
+  newCard.appendChild(cardInfo),
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(publicRepos);
+  // profile.appendChild(email);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  newCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  username.classList.add('username');
+
+  cardImg.src = `${data.avatar_url}`;
+  name.textContent = `Name: ${data.name}`;
+  username.textContent = `Username: ${data.login}`;
+  location.textContent = `Location: ${data.location}`;
+  publicRepos.textContent = `Public Repos: ${data.public_repos}`;
+  // email.textContent = `Email: ${data.email}`;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Following: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
+
+  return newCard;
+}
+
+TweenMax.to(".cards", 5, {boxShadow:"0px 0px 80px black"});
+
 
 /* List of LS Instructors Github username's: 
   tetondan
